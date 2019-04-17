@@ -1,0 +1,71 @@
+1. Ranking order according to google:
+
+Query= find all faculty members who work in deep learning and information theory
+
+1>2>3>4>5>6
+
+
+Query = football in usa
+
+7>8>14
+
+Query= must read english classic books of all time
+
+9>10>11>12>13
+
+
+2. Ranking order according to me:
+
+Query= find all faculty members who work in deep learning and information theory
+
+2                >                4                           >      6        			>           	5	                 >       1    				> 3 
+talks about prof	author is not faculty itself	      prof teaches ML which is used in NN.	    Book on info theory  		prof uses info theory 		just faculty
+who works in both field  but talks about one working	Also teaches quantum information theory		but used in ML and bioinformatics	applies to biological systems
+			in both area
+Query = football in usa
+
+8			>		14					>	7
+talks about football as	    	compares football in us vs others and 		talks about "football" and its technicalities	
+sports in usa and reg body 	how it evolved
+
+Query= must read english classic books of all time
+
+13 			>12 				> 		11			>	10			>	9
+talks about		talks about			talks about 50 most classic books	100 must read classic books	popular classic must read books actual examples
+20 essential		100 most important book		and why are they called classics	and 2 examples
+classic novels		and why they should be read
+
+
+-----------------------------------------------------------------------
+
+Actual results
+
+Q1: 2 > 3 > 1 >  4 > 14
+TP=4
+FP=1
+TN=8
+FN=1
+
+Prec= 4/5 = .8 
+Recall= 4/5 =.8
+
+Q2:  8 > 14 > 2 > 4  > 3
+
+TP=2
+FP=3
+TN=8
+FN=3
+prec= 2/5 = .4
+recall=2/5 = .4
+
+
+
+Q3:  14 (because it contains contains term England)> 13 > 2 > 10 > 3
+TP=2
+FP=3
+TN=6
+FN=3
+
+Prec=2/5 = .4
+Recall=2/5 = .4
+
