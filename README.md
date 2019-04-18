@@ -13,7 +13,7 @@ Install Dependencies:
 
 How to run:
 
-3. Download the two folders (uncased and model) from this zipped file from [drive](https://drive.google.com/open?id=1qx5lKIJ-F0f-VLexNFybcQvkcgIUQUZr)
+3. Download the two folders (uncased and model) from this zipped file from [drive](https://drive.google.com/open?id=1qx5lKIJ-F0f-VLexNFybcQvkcgIUQUZr). Note that you need to access it using your TAMU Gmail id. I am in process of porting it to normal gmail id.
 
 4. Run the bert-serving server as follows:
   `bert-serving-start -model_dir=uncased_L-12_H-768_A-12/ -tuned_model_dir=model/ -ckpt_name=model.ckpt-78 -num_worker=1 -pooling_strategy=CLS_TOKEN -max_seq_len=125 -num_worker=4`
