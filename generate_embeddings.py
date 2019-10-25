@@ -6,10 +6,10 @@
 import os
 data_file='/home/manishp/Research/quora_duplicate_questions.tsv'
 # 0 means dont load, 1 means fetch from file
-LOAD_ENCODING_FROM_FILE=1 
+LOAD_ENCODING_FROM_FILE=0 
 encoding_data_file_quest1='/home/manishp/Research/encoding_quest1'
 encoding_data_file_quest2='/home/manishp/Research/encoding_quest2'
-encoding_data_file_label='/home/manishp/Research/quest_label'
+encoding_data_file_label='/home/manishp/Research/label'
 
 #################################################
 import numpy as np
@@ -21,10 +21,9 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 import numpy as np
 import pickle
-from keras import models
-from keras import layers
-from keras import optimizers
-from keras.layers import Dropout
+
+
+
 
 #################################################
 #Helper functions
@@ -67,6 +66,36 @@ def sanitize_question(text):
 	return text
 
 #################################################
+# Read the input file
+data_df=pd.read_csv(data_file,sep='\t',nrows=100000)
+print(data_df.shape)
+
+sent1=[]
+sent2=[]
+label=[]
+for index, row in data_df.iterrows():
+	sent1.append(sanitize_question(row[3]))
+	sent2.append(sanitize_question(row[4]))
+	label.append(sanitize_question(row[5]))
+
+# removed one n/a entry but havent used the above sanitize function
+		
+#sent1=data_df[data_df.columns[3]].tolist()
+#sent2=data_df[data_df.columns[4]].tolist()
+#label=data_df[data_df.columns[5]]
+
+#label_data=np.array(label_df)
+#label=label_data[:,0]
+#print(sent1[0])
+#print(sent2[0])
+#print(label[0])
+#print(np.shape(sent1))
+#print(np.shape(sent2))
+#sent1 = sanitize_question(sent1)
+#print(sent1[0])
+#print(sanitize_question(sent2[363362]))
+#print(sanitize_question(label[363362]))
+#exit(0)
 
 
 maxlen = 125  # We will cut reviews after 125 words
@@ -79,17 +108,17 @@ maxlen = 125  # We will cut reviews after 125 words
 # [0.4 0.1 0.3] [0.5 0.6 0.1] 1.0
 
 # Save the encodings in a file 
-if LOAD_ENCODING_FROM_FILE == 1:
-	#bc=BertClient(port=5555, port_out=5556)
-	#vec1=bc.encode(sent1)
-	with open(encoding_data_file_quest1, "rb") as fp:
-		vec1=pickle.load(fp)
-	#vec2=bc.encode(sent2)
-	with open(encoding_data_file_quest2, "rb") as fp:   
-		vec2=pickle.load(fp)
-	with open(encoding_data_file_label, "rb") as fp: 
-		label=pickle.load(fp)
-
+if LOAD_ENCODING_FROM_FILE == 0:
+	bc=BertClient(port=5555, port_out=5556)
+	vec1=bc.encode(sent1)
+	with open(encoding_data_file_quest1, "wb") as fp:
+		pickle.dump(vec1, fp)
+	vec2=bc.encode(sent2)
+	with open(encoding_data_file_quest2, "wb") as fp:   
+		pickle.dump(vec2,fp)
+	with open(encoding_data_file_label, "wb") as fp: 
+		pickle.dump(label,fp)
+exit(0)
 #label=label[:500]
 train_vec1 = np.asarray(vec1, np.float32)
 train_vec2 = np.asarray(vec2, np.float32)
@@ -112,48 +141,12 @@ inp1= Input(shape=(768,))
 inp2= Input(shape=(768,))
 
 x = keras.layers.concatenate([inp1, inp2],axis=-1)
-#x = Dense(1024, activation='relu')(x)
-#x = Dropout(0.5) (x)
-#x = Dense(256, activation='relu')(x)
-#x = Dropout(0.5) (x)
-x = Dense(32, activation='relu')(x)
-out=Dense(1,activation='sigmoid')(x)
+x = Dense(64, activation='relu')(x)
+out=Dense(1)(x)
 model = Model(inputs=[inp1,inp2], outputs=out)
 model.summary()
 model.compile(optimizer='rmsprop',
-              loss='binary_crossentropy',
-              metrics=['acc'])
-#print(np.shape(train_vec1))
-#print(np.shape(train_vec2))
-#print(np.shape([train_vec1,train_vec2]))
-#exit(0)
-
-history=model.fit([train_vec1, train_vec2], train_label, 
-	epochs=30,batch_size=200,
-	validation_split=0.2)
-
-#################################################
-# Save model
-# First model uses mean_squared_error, 256, 0.5, 64, 1
-# second model uses binary_crossentropy,256,0.5,64,1
-#with sigmoid 
-model.save('third_model.h5')
-#################################################
-# Plot figures
-import matplotlib.pyplot as plt
-acc = history.history['acc']
-val_acc = history.history['val_acc']
-loss = history.history['loss']
-val_loss = history.history['val_loss']
-epochs = range(1, len(acc) + 1)
-plt.plot(epochs, acc, 'bo', label='Training acc')
-plt.plot(epochs, val_acc, 'b', label='Validation acc')
-plt.title('Training and validation accuracy')
-plt.legend()
-plt.figure()
-plt.plot(epochs, loss, 'bo', label='Training loss')
-plt.plot(epochs, val_loss, 'b', label='Validation loss')
-plt.title('Training and validation loss')
-plt.legend()
-plt.show()
-#################################################
+              loss='mean_squared_error',
+              metrics=['accuracy'])
+history=model.fit([train_vec1, train_vec2], train_label, epochs=20)
+model.save('first_model.h5')
