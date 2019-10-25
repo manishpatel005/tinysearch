@@ -4,12 +4,12 @@
 # Input -Quora Question Pairs
 
 import os
-data_file='/home/manishp/Research/quora_duplicate_questions.tsv'
+data_file='quora_duplicate_questions.tsv'
 # 0 means dont load, 1 means fetch from file
 LOAD_ENCODING_FROM_FILE=1 
-encoding_data_file_quest1='/home/manishp/Research/encoding_quest1'
-encoding_data_file_quest2='/home/manishp/Research/encoding_quest2'
-encoding_data_file_label='/home/manishp/Research/quest_label'
+encoding_data_file_quest1='encoding_quest1'
+encoding_data_file_quest2='encoding_quest2'
+encoding_data_file_label='quest_label'
 
 #################################################
 import numpy as np
