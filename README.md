@@ -2,6 +2,8 @@
 Semantic Search Engine using BERT embeddings
 This is a project done as a part of CSCE 636 (Neural Networks).  
 
+"Please note that support for this repo has been closed. "
+
 Existing search engines use keyword matching or tf-idf based matching to map the query to the web-documentsand rank them. They also consider other factors such as pagerank, hubs-and-authority scores, knowledge graphs to make theresults more meaningful. However, the existing search enginesfail to capture the meaning of query when it becomes largeand complex. BERT, introduced by Google in 2018, provides embeddings for words as well as sentences. In this project, I have developed a semantics-oriented search engine using neural networks and BERT embeddings that can search for query and rank the documents in the order of the most meaningful to least-meaningful. The results shows improvement over one existing search engine for complex queries for given set of documents.
 
 
